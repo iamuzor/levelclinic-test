@@ -1,0 +1,148 @@
+{
+    "id": "medical_conditions_questionnaire_2020_06_26_15_00",
+    "version": "2020_06_26_15_00",
+    "categories": [
+        {
+            "id": "medical_conditions",
+            "label": "Medical Conditions",
+            "description": "Do you have one of the following conditions that you are hoping to discuss Medical Cannabis treatment for?"
+        },
+        {
+            "id": "medication_history",
+            "label": "Medication History",
+            "description": "Have you ever had any medical problems regarding your?"
+        },
+        {
+            "id": "consents",
+            "label": "Consents",
+            "description": "By submitting this form, you agree to Leva Clinic privacy policy and terms and conditions"
+        }
+    ],
+    "questions": [
+        {
+            "id": "medical_conditions_1",
+            "label": "Medical Conditions",
+            "description": "Do you have one of the following conditions that you are hoping to discuss Medical Cannabis treatment for?",
+            "category_id": "medical_conditions",
+            "type": "multiple_choice",
+            "options": [
+                {
+                    "id": "abdominal_pain",
+                    "label": "Abdominal Pain",
+                    "description": ""
+                },
+                {
+                    "id": "cancer_related_pain",
+                    "label": "Cancer-related Pain",
+                    "description": ""
+                },
+                {
+                    "id": "multiple_sclerosis",
+                    "label": "Multiple Sclerosis",
+                    "description": ""
+                },
+                {
+                    "id": "facial_pain",
+                    "label": "Facial Pain",
+                    "description": ""
+                },
+                {
+                    "id": "headache",
+                    "label": "Headache",
+                    "description": ""
+                },
+                {
+                    "id": "back_and_neck_pain",
+                    "label": "Back and Neck Pain",
+                    "description": ""
+                },
+                {
+                    "id": "none",
+                    "label": "None",
+                    "description": ""
+                }
+            ]
+        },
+        {
+            "id": "medical_conditions_2",
+            "label": "Medical Conditions",
+            "description": "Have you ever had an episode of schizophrenia and/or psychosis?",
+            "category_id": "medical_conditions",
+            "type": "single_choice",
+            "options": [
+                {
+                    "id": "yes",
+                    "label": "Yes",
+                    "description": ""
+                },
+                {
+                    "id": "no",
+                    "label": "No",
+                    "description": ""
+                }
+            ]
+        },
+        {
+            "id": "medication_history_1",
+            "label": "Medication History",
+            "description": "Have you ever had any medical problems regarding your Kidney or Liver?",
+            "category_id": "medication_history",
+            "type": "multiple_choice",
+            "options": [
+                {
+                    "id": "kidney",
+                    "label": "Kidney",
+                    "description": ""
+                },
+                {
+                    "id": "liver",
+                    "label": "Liver",
+                    "description": ""
+                },
+                {
+                    "id": "none",
+                    "label": "None",
+                    "description": ""
+                }
+            ]
+        },
+        {
+            "id": "consents_1",
+            "label": "Consents",
+            "description": "I want to receive updates about my care from Leva Clinic as well as latest pain management news (Optional)",
+            "category_id": "consents",
+            "type": "single_choice",
+            "options": [
+                {
+                    "id": "yes",
+                    "label": "Yes",
+                    "description": ""
+                },
+                {
+                    "id": "no",
+                    "label": "No",
+                    "description": ""
+                }
+            ]
+        },
+        {
+            "id": "consents_2",
+            "label": "Consents",
+            "description": "By submitting this form, you agree to Leva Clinic privacy policy and terms and conditions",
+            "category_id": "consents",
+            "type": "single_choice",
+            "options": [
+                {
+                    "id": "yes",
+                    "label": "Yes",
+                    "description": ""
+                },
+                {
+                    "id": "no",
+                    "label": "No",
+                    "description": ""
+                }
+            ]
+        }
+    ]
+}
