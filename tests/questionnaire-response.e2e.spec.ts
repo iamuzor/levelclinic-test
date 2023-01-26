@@ -2,7 +2,7 @@ import axios from 'axios';
 
 describe('QuestionnaireResponse (e2e)', () => {
   const http = axios.create({
-    baseURL: 'https://spicy-books-swim-90-243-205-110.loca.lt',
+    baseURL: 'http://localhost:3001',
   });
 
   describe('POST /questionnaire_response', () => {
