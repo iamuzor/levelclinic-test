@@ -38,4 +38,4 @@ $ docker compose up
 - Publish domain events. So that services that need to know about user onboarding can run their individual processes e.g. send user a registration confirmation email for example.
 - Add swagger API documentation.
 - Add some system design document e.g. C4, Sequence diagram.
-- Add some unit test.
+- Add some unit test. e.g. test `QResponseValidator`.
