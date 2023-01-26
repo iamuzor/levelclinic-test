@@ -1,93 +1,43 @@
-import { Injectable } from '@nestjs/common';
-
-export type QuestionnaireId = string;
-export type QuestionId = string;
-export type OptionId = string;
-export type CategoryId = string;
-export type Label = string;
-
-interface Option {
-  id: OptionId;
-  label: Label;
-}
-
-interface Category {
-  id: CategoryId;
-  label: Label;
-}
-
-interface Questionnaire {
-  id: QuestionnaireId;
-  categories: Category[];
-  questions: Question[];
-}
-
-interface Question {
-  id: QuestionId;
-  categoryId: CategoryId;
-  label: Label;
-  options: Option[];
-}
-
-export interface Answer {
-  questionId: QuestionId;
-  selectedOptionId: OptionId;
-}
+import { BadRequestException, Injectable } from '@nestjs/common';
+import Ajv from 'ajv';
+import mongoose, { Model, Schema } from 'mongoose';
 
 export interface QResponse {
-  questionnaireId: QuestionnaireId;
-  answers: Answer[];
+  [key: string]: string | number | boolean;
 }
 
-interface QResponseResult {
-  questionnaire: Questionnaire;
-  answers: Answer[];
-  results: Array<{
-    questionId: QuestionId;
-    valid: boolean;
-  }>;
-}
+@Injectable()
+export class QResponseRepository {
+  private readonly model: Model<any>;
 
-export abstract class QRepository {
-  abstract find(id: QuestionId): Promise<Questionnaire | null>;
-}
+  constructor() {
+    mongoose.connect(String(process.env.MONGODB_URI));
 
-export abstract class QResponseRepository {
-  abstract save(qResponse: QResponse): Promise<void>;
+    this.model = mongoose.model(
+      'questionnaire_response',
+      new Schema({}, { strict: false, timestamps: true }),
+    );
+  }
+
+  async save(response: QResponse): Promise<void> {
+    await this.model.create(response);
+  }
 }
 
 @Injectable()
 export class QResponseValidator {
-  async validate(
-    questionnaire: Questionnaire,
-    response: QResponse,
-  ): Promise<QResponseResult> {
-    const qResult: QResponseResult = {
-      questionnaire,
-      answers: [],
-      results: [],
-    };
+  private readonly ajv: Ajv;
 
-    questionnaire.questions.forEach((question) => {
-      const answer = response.answers.find(
-        (answer) => answer.questionId === question.id,
-      );
+  constructor() {
+    this.ajv = new Ajv();
+  }
 
-      const selectedOption = question.options.find(
-        (option) => option.id === answer.selectedOptionId,
-      );
+  async validate(response: QResponse, schema: any): Promise<void> {
+    const validate = this.ajv.compile(schema);
+    const valid = validate(response);
 
-      qResult.answers.push({
-        questionId: question?.id,
-        selectedOptionId: selectedOption?.id,
-      });
-
-      qResult.results.push({
-        questionId: question.id,
-        valid: !!selectedOption,
-      });
-    });
-
-    return qResult;
+    if (!valid) {
+      throw new BadRequestException(validate.errors);
+    }
   }
 }

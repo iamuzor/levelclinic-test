@@ -1,4 +1,5 @@
-FROM public.ecr.aws/lambda/nodejs:16
+# FROM public.ecr.aws/lambda/nodejs:16
+FROM node:16
 
 COPY . .
 
