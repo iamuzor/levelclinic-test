@@ -1,43 +1,93 @@
-import { Controller } from '@nestjs/common';
-import { isString } from 'util';
+import { Injectable } from '@nestjs/common';
 
-type QuestionnaireId = string;
+export type QuestionnaireId = string;
+export type QuestionId = string;
+export type OptionId = string;
+export type CategoryId = string;
+export type Label = string;
 
-interface QResponse {
+interface Option {
+  id: OptionId;
+  label: Label;
+}
+
+interface Category {
+  id: CategoryId;
+  label: Label;
+}
+
+interface Questionnaire {
+  id: QuestionnaireId;
+  categories: Category[];
+  questions: Question[];
+}
+
+interface Question {
+  id: QuestionId;
+  categoryId: CategoryId;
+  label: Label;
+  options: Option[];
+}
+
+export interface Answer {
+  questionId: QuestionId;
+  selectedOptionId: OptionId;
+}
+
+export interface QResponse {
   questionnaireId: QuestionnaireId;
+  answers: Answer[];
 }
 
-interface QResponseRepository {
-  save(qResponse: QResponse): Promise<void>;
+interface QResponseResult {
+  questionnaire: Questionnaire;
+  answers: Answer[];
+  results: Array<{
+    questionId: QuestionId;
+    valid: boolean;
+  }>;
 }
 
-interface QResponseValidator {
-  validate(id: QuestionnaireId, qResponse: QResponse): Promise<boolean>;
+export abstract class QRepository {
+  abstract find(id: QuestionId): Promise<Questionnaire | null>;
 }
 
-export class SubmitQuestionnaireResponse {
-  constructor(
-    private readonly repository: QResponseRepository,
-    private readonly validator: QResponseValidator,
-  ) {}
+export abstract class QResponseRepository {
+  abstract save(qResponse: QResponse): Promise<void>;
+}
 
-  async execute(r: QResponse): Promise<void> {
-    const isResponseValid = this.validator.validate(r.questionnaireId, r);
+@Injectable()
+export class QResponseValidator {
+  async validate(
+    questionnaire: Questionnaire,
+    response: QResponse,
+  ): Promise<QResponseResult> {
+    const qResult: QResponseResult = {
+      questionnaire,
+      answers: [],
+      results: [],
+    };
 
-    if (!isResponseValid) {
-      console.error('QuestionnaireResponse is not valid');
-      return;
-    }
+    questionnaire.questions.forEach((question) => {
+      const answer = response.answers.find(
+        (answer) => answer.questionId === question.id,
+      );
 
-    await this.repository.save(r);
+      const selectedOption = question.options.find(
+        (option) => option.id === answer.selectedOptionId,
+      );
+
+      qResult.answers.push({
+        questionId: question?.id,
+        selectedOptionId: selectedOption?.id,
+      });
+
+      qResult.results.push({
+        questionId: question.id,
+        valid: !!selectedOption,
+      });
+    });
+
+    return qResult;
   }
 }
-
-/**
- * API Controller
- */
-class QuestionnaireResponseDto implements QResponse {
-  @IsString()
-  questionnaireId: string;
-}
-class SubmitQuestionnaireApiController extends Controller {}
